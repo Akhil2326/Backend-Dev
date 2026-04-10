@@ -1,0 +1,108 @@
+1. Advantages of using Mongoose over Native MongoDB Driver
+
+Mongoose is an ODM (Object Data Modeling) library for Node.js that adds structure and features on top of MongoDB.
+
+Key Advantages:
+Schema-based structure → Define clear models for data
+Validation → Built-in validation rules (required, min, max, etc.)
+Middleware (hooks) → Run logic before/after operations
+Easier queries → Cleaner and more readable syntax
+Population → Easy handling of relationships between collections
+Default values & setters/getters → More control over data
+
+👉 Native driver is more flexible but requires more manual handling.
+
+2. Difference between findOneAndUpdate() and updateOne()
+Feature	findOneAndUpdate()	updateOne()
+Returns	Updated document	Update result (acknowledgment)
+Default behavior	Returns old doc (can return new with option)	Does NOT return document
+Use case	When you need updated data immediately	When you just want to update
+Middleware	Triggers certain hooks	Limited middleware
+Example:
+// findOneAndUpdate
+await User.findOneAndUpdate(
+  { name: "Akhil" },
+  { age: 22 },
+  { new: true } // returns updated doc
+);
+
+// updateOne
+await User.updateOne(
+  { name: "Akhil" },
+  { age: 22 }
+);
+3. Purpose of Middleware in Mongoose
+
+Middleware (also called hooks) are functions that run before or after certain operations.
+
+Types:
+Pre middleware → runs before action
+Post middleware → runs after action
+Example:
+userSchema.pre("save", function(next) {
+  console.log("Before saving user");
+  next();
+});
+Purpose:
+Data validation
+Logging
+Encryption (e.g., hashing passwords)
+Business logic execution
+4. Pagination in Mongoose
+
+Pagination is used to fetch data in chunks/pages instead of all at once.
+
+Basic Implementation:
+const page = 2;
+const limit = 5;
+
+const users = await User.find()
+  .skip((page - 1) * limit)
+  .limit(limit);
+Explanation:
+skip() → skips previous records
+limit() → number of records per page
+
+👉 Example: Page 2 with 5 records → skips first 5, returns next 5
+
+5. Embedding vs Referencing in MongoDB
+Embedding (Nested Documents)
+
+Store related data inside the same document.
+
+Use when:
+
+Data is closely related
+Read operations are frequent
+Data size is small
+
+Example:
+
+{
+  name: "Akhil",
+  address: {
+    city: "Delhi",
+    pincode: 110001
+  }
+}
+Referencing (Using ObjectId)
+
+Store reference (ID) of another document.
+
+Use when:
+
+Data is large
+Data is reused across multiple documents
+Frequent updates needed
+
+Example:
+
+{
+  name: "Akhil",
+  courseId: ObjectId("123abc")
+}
+Quick Difference:
+Embedding	Referencing
+Faster reads	Better for large/complex data
+No joins needed	Requires population
+Limited size	Scalable
