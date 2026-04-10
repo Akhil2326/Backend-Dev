@@ -1,0 +1,67 @@
+. Key Differences between SQL and NoSQL Databases
+Feature	SQL (Relational DB)	NoSQL (Non-Relational DB)
+Structure	Tables (rows & columns)	Documents, key-value, graph, column
+Schema	Fixed schema	Flexible schema
+Data Type	Structured data	Structured + unstructured
+Scalability	Vertical (scale up)	Horizontal (scale out)
+Query Language	SQL	Varies (MongoDB uses JSON-like queries)
+Examples	MySQL, PostgreSQL	MongoDB, Cassandra
+Example:
+
+SQL (MySQL):
+
+SELECT * FROM students WHERE GPA > 3.5;
+
+NoSQL (MongoDB):
+
+db.students.find({ GPA: { $gt: 3.5 } })
+2. CAP Theorem
+
+The CAP Theorem states that a distributed system can guarantee only two out of three properties:
+
+Consistency (C) → All nodes see the same data
+Availability (A) → Every request gets a response
+Partition Tolerance (P) → System continues despite network failures
+Why not all three?
+
+In real systems, network partition (failure) is unavoidable. When it happens:
+
+If you choose Consistency, you may sacrifice Availability
+If you choose Availability, you may sacrifice Consistency
+
+👉 So, you must choose between CP or AP systems.
+
+3. When MongoDB is Preferred (3 Scenarios)
+✅ 1. Unstructured or Semi-Structured Data
+Example: Social media posts, logs
+MongoDB stores flexible JSON-like documents
+✅ 2. Rapid Development / Changing Schema
+Example: Startups, evolving apps
+No need to redesign schema frequently
+✅ 3. High Scalability Requirements
+Example: Big data apps, real-time analytics
+MongoDB supports horizontal scaling (sharding)
+4. Why MongoDB Uses BSON Instead of JSON
+
+MongoDB internally uses BSON (Binary JSON) because:
+
+✅ Faster processing (binary format is efficient)
+✅ Supports more data types (Date, ObjectId, Binary, etc.)
+✅ Efficient storage and traversal
+❌ JSON is text-based → slower to parse
+
+👉 BSON = Optimized version of JSON for performance
+
+5. MongoDB Query
+
+Find students with GPA > 3.5 and enrolled in CS101:
+
+db.students.find({
+  GPA: { $gt: 3.5 },
+  course: "CS101"
+})
+If course is inside an array:
+db.students.find({
+  GPA: { $gt: 3.5 },
+  courses: "CS101"
+})
